@@ -1,0 +1,18 @@
+# Keil build folders
+Objects/
+Listings/
+
+# Build outputs
+*.axf
+*.bin
+*.hex
+*.map
+*.o
+*.d
+
+# Keil temporary files
+*.bak
+*.dep
+
+# User-specific files
+*.uvguix.*
