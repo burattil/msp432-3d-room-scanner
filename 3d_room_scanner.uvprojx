@@ -382,12 +382,17 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>Source Group 1</GroupName>
+          <GroupName>src</GroupName>
           <Files>
             <File>
               <FileName>3d_room_scanner.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\3d_room_scanner.c</FilePath>
+            </File>
+            <File>
+              <FileName>Init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\Init.c</FilePath>
             </File>
             <File>
               <FileName>onboardLEDs.c</FileName>
@@ -418,6 +423,11 @@
               <FileName>VL53L1X_api.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\VL53L1X_api.c</FilePath>
+            </File>
+            <File>
+              <FileName>Interrupts.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\Interrupts.c</FilePath>
             </File>
           </Files>
         </Group>

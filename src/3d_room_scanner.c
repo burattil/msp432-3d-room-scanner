@@ -1,10 +1,7 @@
-/*  Final Project Code, Luca Burattini
+// Written by Luca Burattini
+// Modified May 29, 2026
 
-            Written by Tom Doyle
-            Updated by  Hafez Mousavi Garmaroudi
-            Last Update: March 17, 2026
-						Updated by Luca Burattini
-*/
+// FINAL PROJECT CODE
 
 #include <stdint.h>
 #include <math.h>
@@ -15,6 +12,8 @@
 #include "onboardLEDs.h"
 #include "tm4c1294ncpdt.h"
 #include "VL53L1X_api.h"
+#include "Init.h"
+#include "Interrupts.h"
 
 #define I2C_MCS_ACK             0x00000008  // Data Acknowledge Enable
 #define I2C_MCS_DATACK          0x00000008  // Acknowledge Data
@@ -36,158 +35,6 @@ volatile int motor = 0, acquire = 0;
 // Create a variable to determine if the motor has done a 360
 volatile int rotationCount = 0;
 
-// Enable interrupts
-void EnableInt(void)
-{    __asm("    cpsie   i\n");
-}
-
-// Disable interrupts
-void DisableInt(void)
-{    __asm("    cpsid   i\n");
-}
-
-// Low power wait
-void WaitForInt(void)
-{    __asm("    wfi\n");
-}
-
-// Initialize Port M as an input
-void PortM_Init(void){
-	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R11;                 	// Activate the clock for Port M
-	while((SYSCTL_PRGPIO_R & SYSCTL_PRGPIO_R11) == 0){};     	  // Allow time for clock to stabilize
-		
-	GPIO_PORTM_DIR_R = 0b00000000;       								      	// Enable PM0 and PM1 as inputs 
-  GPIO_PORTM_DEN_R = 0b00000111;															// Enable PM0 and PM1 as digital pins
-	GPIO_PORTM_PUR_R = 0b00000111;															// Enable the pull-up resistors for PM0 and PM1
-
-	return;
-}
-
-// Enable Port M Interrupts
-void PortM_Interrupt_Init(void){
-	
-		GPIO_PORTM_IS_R = 0;     												// (Step 1) PM[1:0] is Edge-sensitive (Interrupt Sense)
-		GPIO_PORTM_IBE_R = 0;   												// PM[1:0] is not triggered by both edges (Interrupt Both Edges)
-		GPIO_PORTM_IEV_R = 0;   												// PM[1:0] is falling edge event (Interrupt Event)
-		GPIO_PORTM_ICR_R = 0x07;    										// Clear interrupt flag by setting proper bit in ICR register (Interrupt Clear Register)
-		GPIO_PORTM_IM_R = 0x07;     										// Arm interrupt (enable interrupts) on PM[1:0] by setting proper bit in IM register (Interrupt Mask)
-    
-		NVIC_EN2_R = 0x0000100;           							// (Step 2) Enable interrupt 72 in NVIC (which is in Register EN2)
-	
-		NVIC_PRI12_R = 0xA0000000; 											// (Step 4) Set interrupt priority to 5
-
-		EnableInt();																		// (Step 3) Enable Global Interrupt. lets go!
-}
-
-// Configure what happens when a PORTJ interrupt occurs
-void GPIOM_IRQHandler(void){
-	
-	// Create an if-statement that will toggle the on variable if '1' is pressed
-	if((GPIO_PORTM_DATA_R & 0b00000001) == 0)
-	{
-			// Toggle the variable 
-			motor ^= 1;
-		
-			// Change the spinCount back to 0
-			rotationCount = 0;
-		
-			// Acknowledge flag by setting proper bit in ICR register
-			GPIO_PORTM_ICR_R = 0x01;
-	}
-	
-	// Create an if-statement that will toggle the on variable if '2' is pressed
-	if((GPIO_PORTM_DATA_R & 0b00000010) == 0)
-	{
-			// Toggle the variable
-			acquire ^= 1;
-		
-			// Acknowledge flag by setting proper bit in ICR register
-			GPIO_PORTM_ICR_R = 0x02;
-	}
-	
-	// Create an if-statement that will run the clock-bus display code (use AD3)
-	if((GPIO_PORTM_DATA_R & 0b00000100) == 0)
-	{
-			// Make it go forever
-			while(1)
-			{
-					// Turn the output on for 500ms
-					GPIO_PORTL_DATA_R = 0b00000001;
-					SysTick_Wait10ms(50);
-					
-					// Turn the output off for 500ms
-					GPIO_PORTL_DATA_R = 0b00000000;
-					SysTick_Wait10ms(50);
-			}
-	}
-}
-
-void I2C_Init(void){
-  SYSCTL_RCGCI2C_R |= SYSCTL_RCGCI2C_R0;           													// activate I2C0
-  SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R1;          												// activate port B
-  while((SYSCTL_PRGPIO_R&0x0002) == 0){};																		// ready?
-
-    GPIO_PORTB_AFSEL_R |= 0x0C;           																	// 3) enable alt funct on PB2,3       0b00001100
-    GPIO_PORTB_ODR_R |= 0x08;             																	// 4) enable open drain on PB3 only
-
-    GPIO_PORTB_DEN_R |= 0x0C;             																	// 5) enable digital I/O on PB2,3
-//    GPIO_PORTB_AMSEL_R &= ~0x0C;          																// 7) disable analog functionality on PB2,3
-
-                                                                            // 6) configure PB2,3 as I2C
-//  GPIO_PORTB_PCTL_R = (GPIO_PORTB_PCTL_R&0xFFFF00FF)+0x00003300;
-  GPIO_PORTB_PCTL_R = (GPIO_PORTB_PCTL_R&0xFFFF00FF)+0x00002200;    //TED
-    I2C0_MCR_R = I2C_MCR_MFE;                      													// 9) master function enable
-    I2C0_MTPR_R = 0b0000000000000101000000000111011;                       	// 8) configure for 100 kbps clock (added 8 clocks of glitch suppression ~50ns)
-}
-
-//The VL53L1X needs to be reset using XSHUT.  We will use PG0
-void PortG_Init(void){
-    //Use PortG0
-    SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R6;                // activate clock for Port N
-    while((SYSCTL_PRGPIO_R&SYSCTL_PRGPIO_R6) == 0){};    // allow time for clock to stabilize
-    GPIO_PORTG_DIR_R &= 0x00;                                        // make PG0 in (HiZ)
-  GPIO_PORTG_AFSEL_R &= ~0x01;                                     // disable alt funct on PG0
-  GPIO_PORTG_DEN_R |= 0x01;                                        // enable digital I/O on PG0
-                                                                                                    // configure PG0 as GPIO
-  //GPIO_PORTN_PCTL_R = (GPIO_PORTN_PCTL_R&0xFFFFFF00)+0x00000000;
-  GPIO_PORTG_AMSEL_R &= ~0x01;                                     // disable analog functionality on PN0
-
-    return;
-}
-
-// Initialize Port H as an output
-void PortH_Init(void){
-	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R7;            // Activate the clock for Port H
-	while((SYSCTL_PRGPIO_R&SYSCTL_PRGPIO_R7) == 0){};		// Allow time for clock to stabilize
-		
-	GPIO_PORTH_DIR_R = 0b00001111;											// Enable PH[3:0] as outputs													
-	GPIO_PORTH_DEN_R = 0b00001111;											// Enable PH[3:0] as digital pins
-		
-	return;
-}
-
-void PortE_Init(void){	
-	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R4;		              // Activate the clock for Port E
-	while((SYSCTL_PRGPIO_R & SYSCTL_PRGPIO_R4) == 0){};	      // Allow time for clock to stabilize
-  
-	GPIO_PORTE_DIR_R = 0b00000001;														// Enable PE0 as output
-	GPIO_PORTE_DEN_R = 0b00000001;                        		// Enable PE0 as digital pin
-	return;
-	}
-
-//XSHUT     This pin is an active-low shutdown input; 
-//					the board pulls it up to VDD to enable the sensor by default. 
-//					Driving this pin low puts the sensor into hardware standby. This input is not level-shifted.
-void VL53L1X_XSHUT(void){
-    GPIO_PORTG_DIR_R |= 0x01;                                        // make PG0 out
-    GPIO_PORTG_DATA_R &= 0b11111110;                                 //PG0 = 0
-    FlashAllLEDs();
-    SysTick_Wait10ms(10);
-    GPIO_PORTG_DIR_R &= ~0x01;                                            // make PG0 input (HiZ)
-    
-}
-
-
 int main(void) {
 	// Constants used for initializations, etc.
   uint8_t byteData, sensorState=0;
@@ -200,15 +47,15 @@ int main(void) {
 	char dist[16];
 
 	// Initializations
-	PLL_Init();							// PLL
-	SysTick_Init();					// SysTick
-	onboardLEDs_Init();			// LEDs
 	I2C_Init();							// I2C
-	UART_Init(); 						// UART
-	PortH_Init();						// Motor
+	onboardLEDs_Init();			// LEDs
 	PortE_Init();						// Keypad output
+	PortH_Init();						// Motor
 	PortM_Init(); 					// Keypad inputs
 	PortM_Interrupt_Init();	// Interrupt routine
+	PLL_Init();							// PLL
+	SysTick_Init();					// SysTick
+	UART_Init(); 						// UART
 	
 	// Output a low to the first row (PE0)
 	GPIO_PORTE_DATA_R =  0b11111110;
@@ -220,7 +67,8 @@ int main(void) {
 			SysTick_Wait10ms(10);
   }
 	
-	status = VL53L1X_ClearInterrupt(dev); /* clear interrupt has to be called to enable next interrupt*/
+	// lear interrupt has to be called to enable next interrupt
+	status = VL53L1X_ClearInterrupt(dev); 
 	
   /* 2 Initialize the sensor with the default setting  */
   status = VL53L1X_SensorInit(dev);

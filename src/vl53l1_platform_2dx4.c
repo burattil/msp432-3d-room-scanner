@@ -43,9 +43,9 @@
 		Written by: T. Doyle
 		Last update: March 15, 2020
 		
-		Last Update: March 03, 2022
+		Modified March 03, 2022
 		by Hafez Mousavi
-		_  beginTxI2C and  beginRxI2C were modified to use dev address in its original form
+		  - beginTxI2C and  beginRxI2C were modified to use dev address in its original form
 		
 		Modified March 16, 2023 
 		by T. Doyle
@@ -87,7 +87,6 @@ int8_t writeRegisterIndex(uint16_t index) {
 	
   I2C0_MDR_R = data1&0xFF;         // prepare first byte
   I2C0_MCS_R =  0x03&0xFF;				// See Reference Manual Chapter 19
-	FlashI2CTx();
 
   SysTick_Wait(1200);			// YMH - It can take up to 60% of I2C clock to set the bit
 														// so a wait is necessary. See TRM.
@@ -96,13 +95,11 @@ int8_t writeRegisterIndex(uint16_t index) {
                                           // check error bits
   if((I2C0_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR)) != 0){
     I2C0_MCS_R = 0x04&0xFF;
-		FlashI2CError(1);
                                           // return error bits if nonzero
     return (I2C0_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR));
   }
   I2C0_MDR_R = data2&0xFF;         // prepare second byte
   I2C0_MCS_R = 0x05&0xFF;
-	FlashI2CTx();	
 	
 	SysTick_Wait(1200);			// YMH - It can take up to 60% of I2C clock to set the bit
 														// so a wait is necessary. See TRM.
@@ -110,7 +107,6 @@ int8_t writeRegisterIndex(uint16_t index) {
                                           // check error bits
   if((I2C0_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR)) != 0){
     I2C0_MCS_R = 0x04&0xFF;
-		FlashI2CError(1);
                                           // return error bits if nonzero
     return (I2C0_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR));
   }	return 0;
@@ -124,7 +120,6 @@ int8_t writeRegisterIndex_nostop(uint16_t index) {
 	
   I2C0_MDR_R = data1&0xFF;         // prepare first byte
   I2C0_MCS_R =  0x03&0xFF;				// See Reference Manual Chapter 19
-	FlashI2CTx();	
 	
 	SysTick_Wait(1200);			// YMH - It can take up to 60% of I2C clock to set the bit
 														// so a wait is necessary. See TRM.
@@ -132,13 +127,11 @@ int8_t writeRegisterIndex_nostop(uint16_t index) {
                                           // check error bits
   if((I2C0_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR)) != 0){
     I2C0_MCS_R = 0x04&0xFF;
-		FlashI2CError(1);
                                           // return error bits if nonzero
     return (I2C0_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR));
   }
   I2C0_MDR_R = data2&0xFF;         // prepare second byte
   I2C0_MCS_R = 0x01&0xFF;
-	FlashI2CTx();	
 	
 	SysTick_Wait(1200);			// YMH - It can take up to 60% of I2C clock to set the bit
 														// so a wait is necessary. See TRM.
@@ -146,7 +139,6 @@ int8_t writeRegisterIndex_nostop(uint16_t index) {
                                           // check error bits
   if((I2C0_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR)) != 0){
     I2C0_MCS_R = 0x04&0xFF;
-		FlashI2CError(1);
                                           // return error bits if nonzero
     return (I2C0_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR));
   }	return 0;
@@ -161,7 +153,6 @@ int8_t writeI2C(uint8_t *pdata, uint32_t count){
 
 		if (i == 0) { I2C0_MCS_R =  0x03&0xFF; }				// See Reference Manual Chapter 19
 		else { I2C0_MCS_R =  0x01&0xFF; }
-		FlashI2CTx();	
 
 		SysTick_Wait(1200);			// YMH - It can take up to 60% of I2C clock to set the bit
 														// so a wait is necessary. See TRM.
@@ -170,7 +161,6 @@ int8_t writeI2C(uint8_t *pdata, uint32_t count){
                                           // check error bits
 		if((I2C0_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR)) != 0){
 			I2C0_MCS_R = 0x04&0xFF;
-			FlashI2CError(1);
                                           // return error bits if nonzero
 			return (I2C0_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR));
 		}
@@ -178,7 +168,6 @@ int8_t writeI2C(uint8_t *pdata, uint32_t count){
 
 	I2C0_MDR_R = (*pdata)&0xFF;         // prepare last byte
 	I2C0_MCS_R = 0x05&0xFF; 
-	FlashI2CTx();	
 
 	SysTick_Wait(1200);			// YMH - It can take up to 60% of I2C clock to set the bit
 														// so a wait is necessary. See TRM.
@@ -186,7 +175,6 @@ int8_t writeI2C(uint8_t *pdata, uint32_t count){
                                           // check error bits
 		if((I2C0_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR)) != 0){
 			I2C0_MCS_R = 0x04&0xFF;
-			FlashI2CError(1);
                                           // return error bits if nonzero
 			return (I2C0_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR));
 		}
@@ -199,7 +187,6 @@ int8_t writeI2C(uint8_t *pdata, uint32_t count){
 //int8_t readI2C(int8_t *pdata, uint32_t count){
 int8_t readI2C(uint8_t *pdata){	
 	I2C0_MCS_R =  0x07&0xFF; 
-	FlashI2CRx();	
 	
 	SysTick_Wait(1200);			// YMH - It can take up to 60% of I2C clock to set the bit
 														// so a wait is necessary. See TRM.
@@ -211,7 +198,6 @@ int8_t readI2C(uint8_t *pdata){
   if((I2C0_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR)) != 0){
 
     I2C0_MCS_R = 0x04&0xFF;
-		FlashI2CError(1);
 																		// return error bits if nonzero
     return (I2C0_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR));	
 	}

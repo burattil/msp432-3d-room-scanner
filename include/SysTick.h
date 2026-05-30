@@ -34,6 +34,11 @@
  http://users.ece.utexas.edu/~valvano/
  */
 
+#ifndef SYSTICK_H
+#define SYSTICK_H
+
+#include <stdint.h>
+
 // Initialize SysTick with busy wait running at bus clock.
 void SysTick_Init(void);
 
@@ -47,3 +52,5 @@ void SysTick_Wait10ms(uint32_t delay);
 
 // Create the Wait10us 
 void SysTick_Wait10us(uint32_t delay);
+
+#endif

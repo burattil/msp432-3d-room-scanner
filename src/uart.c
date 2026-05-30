@@ -1,15 +1,12 @@
-
 #include "uart.h"
 #include "tm4c1294ncpdt.h"
 #include <stdint.h>
 #include <stdio.h>
 
-
-//Initialize UART0, based on textbook.  Clock code modified.
+// Initialize UART0, based on textbook.  Clock code modified.
 void UART_Init(void) {
 	SYSCTL_RCGCUART_R |= 0x0001; // activate UART0   
-	SYSCTL_RCGCGPIO_R |= 0x0001; // activate port A   
-	//UART0_CTL_R &= ~0x0001; // disable UART   
+	SYSCTL_RCGCGPIO_R |= 0x0001; // activate port A
 
 	while((SYSCTL_PRUART_R&SYSCTL_PRUART_R0) == 0){};
 		
@@ -33,34 +30,34 @@ void UART_Init(void) {
 }
 
 // Wait for new input, then return ASCII code 
-	char UART_InChar(void){
-		while((UART0_FR_R&0x0010) != 0);		// wait until RXFE is 0   
-		return((char)(UART0_DR_R&0xFF));
-	} 
+char UART_InChar(void){
+	while((UART0_FR_R&0x0010) != 0);		// wait until RXFE is 0   
+	return((char)(UART0_DR_R&0xFF));
+} 
 	
-	// Wait for buffer to be not full, then output 
-	void UART_OutChar(char data){
-		while((UART0_FR_R&0x0020) != 0);	// wait until TXFF is 0   
-		UART0_DR_R = data;
-	} 
-	void UART_printf(const char* array){
-		int ptr=0;
-		while(array[ptr]){
-			UART_OutChar(array[ptr]);
-			ptr++;
-		}
+// Wait for buffer to be not full, then output 
+void UART_OutChar(char data){
+	while((UART0_FR_R&0x0020) != 0);	// wait until TXFF is 0   
+	UART0_DR_R = data;
+} 
+void UART_printf(const char* array){
+	int ptr=0;
+	while(array[ptr]){
+		UART_OutChar(array[ptr]);
+		ptr++;
 	}
+}
 	
-	void Status_Check(char* array, int status){
-			if (status != 0){
-				UART_printf(array);
-				sprintf(printf_buffer," failed with (%d)\r\n",status);
-				UART_printf(printf_buffer);
-			}else
-			{
-				UART_printf(array);
-				UART_printf(" Successful.\r\n");
-			}
+void Status_Check(char* array, int status){
+	if (status != 0){
+		UART_printf(array);
+		sprintf(printf_buffer," failed with (%d)\r\n",status);
+		UART_printf(printf_buffer);
 	}
+	else{
+		UART_printf(array);
+		UART_printf(" Successful.\r\n");
+	}
+}
 
 	

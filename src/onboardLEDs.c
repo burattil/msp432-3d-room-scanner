@@ -1,81 +1,61 @@
 #include <stdint.h>
 #include "tm4c1294ncpdt.h"
-//#include "PLL.h"
 #include "SysTick.h"
 #include "onboardLEDs.h"
 
 #define DELAY 1
 
-//Flash D1
+// FUNCTIONS TO EASILY USE ONBOARD LEDs
+
+// Flash D1 with a 20 ms period
 void FlashLED1(int count) {
 		while(count--) {
-			GPIO_PORTN_DATA_R ^= 0b00000010; 								//hello world!
-			SysTick_Wait10ms(DELAY);														//.05s delay
-			GPIO_PORTN_DATA_R ^= 0b00000010;			
-			SysTick_Wait10ms(DELAY);														//.05s delay
+			GPIO_PORTN_DATA_R ^= 0b00000010;
+			SysTick_Wait10ms(DELAY);
+			GPIO_PORTN_DATA_R ^= 0b00000010;
+			SysTick_Wait10ms(DELAY);
 		}
 }
 
-//Flash D2
+// Flash D2 with a 20 ms period
 void FlashLED2(int count) {
 		while(count--) {
-			GPIO_PORTN_DATA_R ^= 0b00000001; 								//hello world!
-			SysTick_Wait10ms(DELAY);														//.05s delay
-			GPIO_PORTN_DATA_R ^= 0b00000001;			
-			SysTick_Wait10ms(DELAY);														//.05s delay			
+			GPIO_PORTN_DATA_R ^= 0b00000001;
+			SysTick_Wait10ms(DELAY);
+			GPIO_PORTN_DATA_R ^= 0b00000001;
+			SysTick_Wait10ms(DELAY);		
 		}
 }
 
-//Flash D3
+// Flash D3 with a 20 ms period
 void FlashLED3(int count) {
 		while(count--) {
-			GPIO_PORTF_DATA_R ^= 0b00010000; 								//hello world!
-			SysTick_Wait10ms(DELAY);														//.05s delay
-			GPIO_PORTF_DATA_R ^= 0b00010000;			
-			SysTick_Wait10ms(DELAY);														//.05s delay			
+			GPIO_PORTF_DATA_R ^= 0b00010000;
+			SysTick_Wait10ms(DELAY);
+			GPIO_PORTF_DATA_R ^= 0b00010000;
+			SysTick_Wait10ms(DELAY);		
 		}
 }
 
-//Flash D4
+// Flash D4 with a 20 ms period
 void FlashLED4(int count) {
 		while(count--) {
-			GPIO_PORTF_DATA_R ^= 0b00000001; 								//hello world!
-			SysTick_Wait10ms(DELAY);														//.05s delay
-			GPIO_PORTF_DATA_R ^= 0b00000001;			
-			SysTick_Wait10ms(DELAY);														//.05s delay			
+			GPIO_PORTF_DATA_R ^= 0b00000001;
+			SysTick_Wait10ms(DELAY);
+			GPIO_PORTF_DATA_R ^= 0b00000001;
+			SysTick_Wait10ms(DELAY);
 		}
 }
 
+// Flash all LEDs with a 500 ms period
 void FlashAllLEDs(){
-		GPIO_PORTN_DATA_R ^= 0b00000011; 								//hello world!
-		GPIO_PORTF_DATA_R ^= 0b00010001; 								//hello world!	
-		SysTick_Wait10ms(25);														//.25s delay
-		GPIO_PORTN_DATA_R ^= 0b00000011;			
-		GPIO_PORTF_DATA_R ^= 0b00010001; 								//goodbye world!	
-		SysTick_Wait10ms(25);														//.25s delay			
+		GPIO_PORTN_DATA_R ^= 0b00000011;
+		GPIO_PORTF_DATA_R ^= 0b00010001;
+		SysTick_Wait10ms(25);
+		GPIO_PORTN_DATA_R ^= 0b00000011;
+		GPIO_PORTF_DATA_R ^= 0b00010001;
+		SysTick_Wait10ms(25);
 }
-
-void FlashI2CTx(){
-//	FlashLED1(1);
-}
-
-void FlashI2CRx(){
-//	FlashLED2(1);
-}
-
-
-
-//Flash Error D1&D2&D3&D4
-void FlashI2CError(int count) {
-//		while(count--) {
-//			FlashAllLEDs();
-//		}
-}
-
-
-
-
-
 
 // Initialize onboard LEDs
 void onboardLEDs_Init(void){
@@ -102,7 +82,3 @@ void onboardLEDs_Init(void){
 	FlashAllLEDs();
 	return;
 }
-
-
-
-

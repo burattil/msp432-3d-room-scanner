@@ -24,8 +24,9 @@
  http://users.ece.utexas.edu/~valvano/
  */
  
- // ADJUSTED TO MAKE THE BUS SPEED 14MHz
- 
+// Updated by Luca Burattini, March 17, 2026
+
+// ADJUSTED TO MAKE THE BUS SPEED 14MHz
  
 #include <stdint.h>
 #include "PLL.h"
@@ -175,7 +176,6 @@ void PLL_Init(void){ uint32_t timeout;
                        SYSCTL_RSCLKCFG_MEMTIMU |
                        SYSCTL_RSCLKCFG_USEPLL;
 }
-
 
 /*
 PSYSDIV  SysClk (Hz)
