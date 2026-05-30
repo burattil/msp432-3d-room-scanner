@@ -20,17 +20,17 @@ void WaitForInt(void)
 // Enable Port M Interrupts
 void PortM_Interrupt_Init(void){
 	
-		GPIO_PORTM_IS_R = 0;     												// (Step 1) PM[1:0] is Edge-sensitive (Interrupt Sense)
-		GPIO_PORTM_IBE_R = 0;   												// PM[1:0] is not triggered by both edges (Interrupt Both Edges)
-		GPIO_PORTM_IEV_R = 0;   												// PM[1:0] is falling edge event (Interrupt Event)
-		GPIO_PORTM_ICR_R = 0x07;    										// Clear interrupt flag by setting proper bit in ICR register (Interrupt Clear Register)
-		GPIO_PORTM_IM_R = 0x07;     										// Arm interrupt (enable interrupts) on PM[1:0] by setting proper bit in IM register (Interrupt Mask)
+		GPIO_PORTM_IS_R = 0;  // (Step 1) PM[1:0] is Edge-sensitive (Interrupt Sense)
+		GPIO_PORTM_IBE_R = 0;  // PM[1:0] is not triggered by both edges (Interrupt Both Edges)
+		GPIO_PORTM_IEV_R = 0;  // PM[1:0] is falling edge event (Interrupt Event)
+		GPIO_PORTM_ICR_R = 0x07;  // Clear interrupt flag by setting proper bit in ICR register (Interrupt Clear Register)
+		GPIO_PORTM_IM_R = 0x07;  // Arm interrupt (enable interrupts) on PM[1:0] by setting proper bit in IM register (Interrupt Mask)
     
-		NVIC_EN2_R = 0x0000100;           							// (Step 2) Enable interrupt 72 in NVIC (which is in Register EN2)
+		NVIC_EN2_R = 0x0000100;  // (Step 2) Enable interrupt 72 in NVIC (which is in Register EN2)
 	
-		NVIC_PRI12_R = 0xA0000000; 											// (Step 4) Set interrupt priority to 5
+		NVIC_PRI12_R = 0xA0000000;  // (Step 4) Set interrupt priority to 5
 
-		EnableInt();																		// (Step 3) Enable Global Interrupt. lets go!
+		EnableInt();  // (Step 3) Enable Global Interrupt. lets go!
 }
 
 // Configure what happens when a PORT M interrupt occurs
