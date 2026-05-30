@@ -70,3 +70,10 @@ void VL53L1X_XSHUT(void){
   SysTick_Wait10ms(10);
   GPIO_PORTG_DIR_R &= ~0x01;  // Make PG0 input (HiZ)  
 }
+
+void Begin_Scanning(void){
+	// Output a low to the first row (PE0) to allow for keypad scanning
+	GPIO_PORTE_DATA_R =  0b11111110;
+	
+	return;
+}

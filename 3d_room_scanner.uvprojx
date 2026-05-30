@@ -395,6 +395,11 @@
               <FilePath>.\src\Init.c</FilePath>
             </File>
             <File>
+              <FileName>Interrupts.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\Interrupts.c</FilePath>
+            </File>
+            <File>
               <FileName>onboardLEDs.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\onboardLEDs.c</FilePath>
@@ -425,9 +430,9 @@
               <FilePath>.\src\VL53L1X_api.c</FilePath>
             </File>
             <File>
-              <FileName>Interrupts.c</FileName>
+              <FileName>ToFSensor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\Interrupts.c</FilePath>
+              <FilePath>.\src\ToFSensor.c</FilePath>
             </File>
           </Files>
         </Group>

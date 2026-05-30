@@ -7,5 +7,6 @@ void PortM_Init(void);
 
 void I2C_Init(void);
 void VL53L1X_XSHUT(void);
+void Begin_Scanning(void);
 
 #endif

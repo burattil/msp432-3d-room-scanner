@@ -1,6 +1,8 @@
 #include <stdint.h>
+#include "Interrupts.h"
 #include "tm4c1294ncpdt.h"
 #include "SysTick.h"
+#include "ToFSensor.h"
 
 // Enable interrupts
 void EnableInt(void)
@@ -36,42 +38,23 @@ void PortM_Interrupt_Init(void){
 // Configure what happens when a PORT M interrupt occurs
 void GPIOM_IRQHandler(void){
 	
-	// Create an if-statement that will toggle the on variable if '1' is pressed
+	// Create an if-statement that will get the measurements if '1' is pressed
 	if((GPIO_PORTM_DATA_R & 0b00000001) == 0)
 	{
-			// Toggle the variable 
-			motor ^= 1;
-		
-			// Change the spinCount back to 0
-			rotationCount = 0;
-		
-			// Acknowledge flag by setting proper bit in ICR register
-			GPIO_PORTM_ICR_R = 0x01;
+		Get_Measurements();
+	
+		// Acknowledge flag by setting proper bit in ICR register
+		GPIO_PORTM_ICR_R = 0x01;
 	}
 	
 	// Create an if-statement that will toggle the on variable if '2' is pressed
 	if((GPIO_PORTM_DATA_R & 0b00000010) == 0)
 	{
-			// Toggle the variable
-			acquire ^= 1;
+		// Only send the measurements if the values have been taken
+		if(Measurements_Taken())
+			Send_Measurements();
 		
-			// Acknowledge flag by setting proper bit in ICR register
-			GPIO_PORTM_ICR_R = 0x02;
-	}
-	
-	// Create an if-statement that will run the clock-bus display code (use AD3)
-	if((GPIO_PORTM_DATA_R & 0b00000100) == 0)
-	{
-			// Make it go forever
-			while(1)
-			{
-					// Turn the output on for 500ms
-					GPIO_PORTL_DATA_R = 0b00000001;
-					SysTick_Wait10ms(50);
-					
-					// Turn the output off for 500ms
-					GPIO_PORTL_DATA_R = 0b00000000;
-					SysTick_Wait10ms(50);
-			}
+		// Acknowledge flag by setting proper bit in ICR register
+		GPIO_PORTM_ICR_R = 0x02;
 	}
 }
