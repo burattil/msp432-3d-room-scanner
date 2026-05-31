@@ -16,3 +16,6 @@ Listings/
 
 # User-specific files
 *.uvguix.*
+
+# Keil debug/system view files
+*.scvd
