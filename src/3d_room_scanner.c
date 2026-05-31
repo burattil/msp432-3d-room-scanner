@@ -4,7 +4,7 @@
 // FINAL PROJECT CODE
 
 #include <stdint.h>
-#include <math.h>
+//#include <math.h>
 #include <string.h>
 #include "PLL.h"
 #include "SysTick.h"
@@ -12,10 +12,10 @@
 #include "onboardLEDs.h"
 #include "tm4c1294ncpdt.h"
 #include "VL53L1X_api.h"
+#include "vl53l1_platform_2dx4.h"
 #include "Init.h"
 #include "Interrupts.h"
 #include "ToFSensor.h"
-#include "vl53l1_platform_2dx4.h"
 
 int main(void) {
 	// Initializations

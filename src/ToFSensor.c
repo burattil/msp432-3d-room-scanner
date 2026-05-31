@@ -21,7 +21,7 @@ int status = 0;
 uint8_t measurements = 0;
 
 // Variables used to gather measurements and send them, respectively
-char distances[MEASUREMENTS][32];
+char distances[XMEASUREMENTS][32];
 char dist[16];
 
 // Create a variable to determine if the motor has done a 360
@@ -63,7 +63,7 @@ void Sensor_Wait(void){
 // Get the measurements with the sensor
 void Get_Measurements(void){
 	// Go for as many times as MEASUREMENTS
-	for(int i = 0; i < MEASUREMENTS; i++){
+	for(int i = 0; i < XMEASUREMENTS; i++){
 		// Get the distance measured 32 times
 		for(int j = 0; j < 32; j++){
 			Sensor_Wait();
@@ -139,7 +139,7 @@ void Get_Measurements(void){
 // Send the measurements via UART
 void Send_Measurements(void){
 	// Send as many times as MEASUREMENTS
-	for(int i = 0; i < MEASUREMENTS; i++){
+	for(int i = 0; i < XMEASUREMENTS; i++){
 		// Send the distance measured 32 times
 		for(int j = 0; j < 32; j++){
 			// Save each value in a buffer string
