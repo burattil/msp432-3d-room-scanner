@@ -2,7 +2,7 @@
 
 A 3D room scanner built using an MSP432 microcontroller and a VL53L1X Time-of-Flight (ToF) sensor. The device measures multiple 360° planes of the room and generates a 3D rendering of the surrounding environment on the connected computer.
 
-![Scanner Prototype](images/3D_scanner.jpeg)
+<img src="images/3D_scanner.jpg" width="600">
 
 ## Usage
 
