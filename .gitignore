@@ -19,3 +19,6 @@ Listings/
 
 # Keil debug/system view files
 *.scvd
+
+# Visualization files
+.xyz
