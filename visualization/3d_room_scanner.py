@@ -1,8 +1,8 @@
 import open3d as o3d
 import numpy as np
+import time
 import serial
 import math
-import time 
 
 # Create initial values of prev's, just in case the first one is a poor value
 prevY = 0
@@ -13,7 +13,7 @@ xMEASUREMENTS = 3
 xDISTANCE = 300
 
 # Create and open s
-s = serial.Serial('COM5', 115200, timeout = 10)
+s = serial.Serial('COM6', 115200, timeout = 10)
                             
 print("Opening: " + s.name)
 print("Please begin input!")
@@ -25,7 +25,7 @@ f = open("tof_radar.xyz", "w")
 s.reset_output_buffer()
 s.reset_input_buffer()
 
-# Do this 3 times of 32
+# Do this xMEASUREMENTS times of 32
 for i in range(xMEASUREMENTS):
 # recieve characters from UART of MCU
     for j in range(32):
@@ -54,7 +54,7 @@ for i in range(xMEASUREMENTS):
         
         # Now write them to the file
         f.write(f"{x} {y} {z}\n")
-
+       
     # Add a delay for the motor spinning back
     time.sleep(5)   
        

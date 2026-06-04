@@ -2,17 +2,18 @@
 
 A 3D room scanner built using an MSP432 microcontroller and a VL53L1X Time-of-Flight (ToF) sensor. The device measures multiple 360° planes of the room and generates a 3D rendering of the surrounding environment on the connected computer.
 
-![3D Scanner](images/3D_scanner.jpeg)
+<p align="center">
+    <img src="images/3D_scanner.JPG" alt="3D scanner" width="500">
+</p>
 
 ## Usage
 
  1. Assemble and connect the scanner to the PC.
  2. Upload the firmware to the MCU.
  3. Position the scanner in the room of choice.
- 4. Click '1' on the keypad to begin measurements.
- 5. After each 360° y-z scan, manually move the device in the desired x-distance.
- 6. After collection is complete, click '2' on the keypad to transfer the data. After the LED turns off, run the Python code.
- 7. A 3D rendering will be generated from the collected data.
+ 4. Click the onboard pushbutton PJ1 to enable measurements, and PJ0 to begin measuring.
+ 5. After each 360° y-z scan, manually move the device the desired x-distance.
+ 6. After collection is complete, a 3D rendering will be generated from the collected data.
 
 ## Features
 
@@ -31,7 +32,6 @@ A 3D room scanner built using an MSP432 microcontroller and a VL53L1X Time-of-Fl
  - VL53L1X ToF sensor
  - 28BYJ-48 Stepper motor and motor driver
  - Sensor mount
- - 4x4 Keypad
  - Power supply
 
 ## Software
@@ -54,11 +54,12 @@ A 3D room scanner built using an MSP432 microcontroller and a VL53L1X Time-of-Fl
 ## Configuration
 
 To modify the number of x-measurements that are taken, modify the variable xMEASUREMENTS.
-This parameter can be modified in include/ToFSensor.h and visualization/3d_room_scanner.py. 
-NOTE: The parameter must be changed in both files for proper functionality.
+This parameter can be modified in include/ToFSensor.h and visualization/3d_room_scanner.py. The parameter must be changed in both files for proper functionality.
 
 To modify the distance between x-measurements (in mm), modify the variable xDISTANCE.
 This parameter can be modified in visualization/3d_room_scanner.py.
+
+NOTE: Ensure that port is correct in the visualization code.
 
 ## Wiring
 
@@ -67,10 +68,8 @@ This parameter can be modified in visualization/3d_room_scanner.py.
 | ToF VIN | 3.3 V|
 | ToF SCL | PB2 | 
 | ToF SDA | PB3 |
+| Motor Driver VIN | 5 V |
 | Motor Driver IN1–IN4 | PH0–PH3 | 
-| Keypad Row #1 | PE0 |
-| Keypad Column #1 | PM0 |
-| Keypad Column #2 | PM1 |
 
 ## Mechanical Assembly
 
@@ -78,15 +77,31 @@ The prototype was mounted on a cardboard enclosure to organize and support the d
 
 A 3D-printed mounting bracket was used to attach the ToF sensor to the motor shaft. This allows the 360° rotation.
 
-![Mounting Bracket](images/Motor_Mount.jpeg)
+<p align="center">
+    <img src="images/Motor_Mount.jpeg" alt="Motor Mount" width="400">
+</p>
 
 ## Results
 
-![Scanned Area](images/Hallway.jpeg)
+### Scanned Area
 
-![3D Rendering, View #1](images/Scanned_1.png)
-![3D Rendering, View #2](images/Scanned_2.png)
-![3D Rendering, View #3](images/Scanned_3.png)
+<p align="center">
+    <img src="images/Hallway.jpeg" alt="Scanned Area" width="400">
+</p>
+
+### 3D Rendering
+
+<p align="center">
+    <img src="images/Scanned_1.png" alt="3D Rendering" width="400">
+</p>
+
+<p align="center">
+    <img src="images/Scanned_2.png" alt="3D Rendering" width="400">
+</p>
+
+<p align="center">
+    <img src="images/Scanned_3.png" alt="3D Rendering" width="400">
+</p>
 
 ## Future Improvements
 

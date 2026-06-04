@@ -19,17 +19,15 @@
 
 int main(void) {
 	// Initializations
-	I2C_Init();							// I2C
+	PLL_Init();							// PLL
 	SysTick_Init();					// SysTick
 	onboardLEDs_Init();			// LEDs
-	PortE_Init();						// Keypad output
-	PortH_Init();						// Motor
-	PortM_Init(); 					// Keypad inputs
-	PortM_Interrupt_Init();	// Interrupt routine
-	PLL_Init();							// PLL
+	I2C_Init();							// I2C
 	UART_Init(); 						// UART
+	PortH_Init();						// Motor
+	PortJ_Init();						// Push buttons
+	PortJ_Interrupt_Init();	// Interrupt routine
 	Sensor_Init();					// ToF Sensor
-	Begin_Scanning(); 			// Begin scanning the keypad
 	
 	while(1){}
 		

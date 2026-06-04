@@ -7,15 +7,17 @@
 
 // FUNCTIONS FOR GENERAL BOARD INITIALIZATIONS
 
-// Initialize Port E as an output for scanning the keypad
-void PortE_Init(void){	
-	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R4;  // Activate the clock for Port E
-	while((SYSCTL_PRGPIO_R & SYSCTL_PRGPIO_R4) == 0){};  // Allow time for clock to stabilize
-  
-	GPIO_PORTE_DIR_R = 0b00000001;  // Enable PE0 as output
-	GPIO_PORTE_DEN_R = 0b00000001;  // Enable PE0 as digital pin
-	return;
-	}
+// Give clock to Port J and initalize PJ[1:0] as Digital Input GPIO
+void PortJ_Init(void){
+	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R8;  // Activate clock for Port J
+	while((SYSCTL_PRGPIO_R&SYSCTL_PRGPIO_R8) == 0){};  // Allow time for clock to stabilize
+  GPIO_PORTJ_DIR_R &= ~0x03;  // Make PJ[1:0] input 
+  GPIO_PORTJ_DEN_R |= 0x03;  // Enable digital I/O on PJ[1:0]
+	
+	GPIO_PORTJ_PCTL_R &= ~0x000000FF;  //? Configure PJ1 as GPIO 
+	GPIO_PORTJ_AMSEL_R &= ~0x03;  //??Disable analog functionality on PJ[1:0]		
+	GPIO_PORTJ_PUR_R |= 0x03;  //	Enable weak pull up resistor on PJ[1:0]
+}
 
 // Initialize Port H as an output for the stepper motor
 void PortH_Init(void){
@@ -25,18 +27,6 @@ void PortH_Init(void){
 	GPIO_PORTH_DIR_R = 0b00001111;  // Enable PH[3:0] as outputs													
 	GPIO_PORTH_DEN_R = 0b00001111;  // Enable PH[3:0] as digital pins
 		
-	return;
-}
-
-// Initialize Port M as an input for the keypad's push buttons
-void PortM_Init(void){
-	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R11;  // Activate the clock for Port M
-	while((SYSCTL_PRGPIO_R & SYSCTL_PRGPIO_R11) == 0){};  // Allow time for clock to stabilize
-		
-	GPIO_PORTM_DIR_R = 0b00000000;  // Enable PM0 and PM1 as inputs 
-  GPIO_PORTM_DEN_R = 0b00000011;  // Enable PM0 and PM1 as digital pins
-	GPIO_PORTM_PUR_R = 0b00000011;  // Enable the pull-up resistors for PM0 and PM1
-
 	return;
 }
 
@@ -69,11 +59,4 @@ void VL53L1X_XSHUT(void){
   FlashAllLEDs();
   SysTick_Wait10ms(10);
   GPIO_PORTG_DIR_R &= ~0x01;  // Make PG0 input (HiZ)  
-}
-
-void Begin_Scanning(void){
-	// Output a low to the first row (PE0) to allow for keypad scanning
-	GPIO_PORTE_DATA_R =  0b11111110;
-	
-	return;
 }
