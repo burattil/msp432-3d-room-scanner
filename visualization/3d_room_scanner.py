@@ -4,15 +4,15 @@ import time
 import serial
 import math
 
-# Create initial values of prev's, just in case the first one is a poor value
-prevY = 0
-prevZ = 0
-
 # Configurable variables
 xMEASUREMENTS = 3
 xDISTANCE = 300
 
-# Create and open s
+# Create initial values of prev's, just in case the first one is a poor value
+prevY = 0
+prevZ = 0
+
+# Create and open s——ENSURE CORRECT PORT AND BAUD RATE FOR YOUR SYSTEM
 s = serial.Serial('COM6', 115200, timeout = 10)
                             
 print("Opening: " + s.name)
@@ -57,9 +57,6 @@ for i in range(xMEASUREMENTS):
        
     # Add a delay for the motor spinning back
     time.sleep(5)   
-       
-# the encode() and decode() function are needed to convert string to bytes
-# because pyserial library functions work with type "bytes"
 
 # Close the file
 f.close()
@@ -68,17 +65,7 @@ f.close()
 print("Closing: " + s.name)
 s.close()
 
-#Read the test data in from the file we created        
-# print("Read in the room point data (rpd)")
 rpd = o3d.io.read_point_cloud("tof_radar.xyz", format="xyz")
-
-#Lets see what our point cloud data looks like numerically       
-# print("The RPD array:")
-# print(np.asarray(rpd.points))
-
-#Lets see what our point cloud data looks like graphically       
-# print("Lets visualize the RPD: (spawns seperate interactive window)")
-# o3d.visualization.draw_geometries([rpd])
 
 #Define coordinates to connect lines       
 lines = []  
@@ -99,9 +86,6 @@ for x in range(xMEASUREMENTS - 1):
 
 #This line maps the lines to the 3d coordinate vertices
 line_set = o3d.geometry.LineSet(points=o3d.utility.Vector3dVector(np.asarray(rpd.points)),lines=o3d.utility.Vector2iVector(lines))
-
-# Optionally (I think) create the axis
-# axis = o3d.geometry.TriangleMesh.create_coordinate_frame(size = 100, origin = [0, 0, 0])
 
 #Lets see what our point cloud data with lines looks like graphically (add axis if necessary)
 o3d.visualization.draw_geometries([line_set])
