@@ -4,7 +4,6 @@
 // FINAL PROJECT CODE
 
 #include <stdint.h>
-//#include <math.h>
 #include <string.h>
 #include "PLL.h"
 #include "SysTick.h"
@@ -19,15 +18,15 @@
 
 int main(void) {
 	// Initializations
-	PLL_Init();							// PLL
-	SysTick_Init();					// SysTick
-	onboardLEDs_Init();			// LEDs
-	I2C_Init();							// I2C
-	UART_Init(); 						// UART
-	PortH_Init();						// Motor
-	PortJ_Init();						// Push buttons
+	PLL_Init();  // PLL
+	SysTick_Init();  // SysTick
+	onboardLEDs_Init();  // LEDs
+	I2C_Init();  // I2C
+	UART_Init();  // UART
+	PortH_Init();  // Motor
+	PortJ_Init();  // Push buttons
 	PortJ_Interrupt_Init();	// Interrupt routine
-	Sensor_Init();					// ToF Sensor
+	Sensor_Init();  // ToF Sensor
 	
 	while(1){}
 		

@@ -46,12 +46,13 @@
 
 // Initialize SysTick with busy wait running at bus clock.
 void SysTick_Init(void){
-  NVIC_ST_CTRL_R = 0;                   // disable SysTick during setup
+  NVIC_ST_CTRL_R = 0;  // disable SysTick during setup
   NVIC_ST_RELOAD_R = NVIC_ST_RELOAD_M;  // maximum reload value
-  NVIC_ST_CURRENT_R = 0;                // any write to current clears it
-                                        // enable SysTick with core clock
-  NVIC_ST_CTRL_R = NVIC_ST_CTRL_ENABLE+NVIC_ST_CTRL_CLK_SRC;
+  NVIC_ST_CURRENT_R = 0;  // any write to current clears it
+                                        
+  NVIC_ST_CTRL_R = NVIC_ST_CTRL_ENABLE+NVIC_ST_CTRL_CLK_SRC;  // enable SysTick with core clock
 }
+
 // Time delay using busy wait.
 // The delay parameter is in units of the core clock. (units of 71.4285 nsec for 14 MHz clock)
 void SysTick_Wait(uint32_t delay){
@@ -62,6 +63,7 @@ void SysTick_Wait(uint32_t delay){
   }
   while(elapsedTime <= delay);
 }
+
 // Time delay using busy wait.
 // This assumes 14 MHz system clock.
 void SysTick_Wait10ms(uint32_t delay){

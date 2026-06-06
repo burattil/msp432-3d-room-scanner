@@ -17,6 +17,8 @@ void PortJ_Init(void){
 	GPIO_PORTJ_PCTL_R &= ~0x000000FF;  //? Configure PJ1 as GPIO 
 	GPIO_PORTJ_AMSEL_R &= ~0x03;  //??Disable analog functionality on PJ[1:0]		
 	GPIO_PORTJ_PUR_R |= 0x03;  //	Enable weak pull up resistor on PJ[1:0]
+		
+  return;
 }
 
 // Initialize Port H as an output for the stepper motor
@@ -59,4 +61,6 @@ void VL53L1X_XSHUT(void){
   FlashAllLEDs();
   SysTick_Wait10ms(10);
   GPIO_PORTG_DIR_R &= ~0x01;  // Make PG0 input (HiZ)  
+	
+	return;
 }
