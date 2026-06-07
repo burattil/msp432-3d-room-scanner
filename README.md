@@ -11,7 +11,7 @@ A 3D room scanner built using an MSP432 microcontroller and a VL53L1X Time-of-Fl
  1. Assemble and connect the scanner to the PC.
  2. Upload the firmware to the MCU.
  3. Position the scanner in the room of choice.
- 4. Click the onboard pushbutton PJ1 to enable measurements, and PJ0 to begin measuring.
+ 4. Click the onboard pushbutton PJ1 to enable measurements, run the visualization code, and click PJ0 to begin measuring.
  5. After each 360° y-z scan, manually move the device the desired x-distance.
  6. After collection is complete, a 3D rendering will be generated from the collected data.
 
