@@ -103,14 +103,6 @@ A 3D-printed mounting bracket was used to attach the ToF sensor to the motor sha
     <img src="images/Scanned_3.png" alt="3D Rendering" width="400">
 </p>
 
-## Future Improvements
-
- - Higher scan resolution
- - Automated x-axis movement
- - Wireless data transfer
- - Improved enclosure
- - Real-time visualization
-
 ## Author
 
 Luca Burattini
