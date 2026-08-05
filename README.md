@@ -71,7 +71,7 @@ NOTE: Ensure that port is correct in the visualization code.
 | Motor Driver VIN | 5 V |
 | Motor Driver IN1–IN4 | PH0–PH3 | 
 
-<img width="952" height="377" alt="image" src="https://github.com/user-attachments/assets/5f3546eb-ccce-42dc-b945-af78c0673014" />
+<img width="400" height="377" alt="image" src="https://github.com/user-attachments/assets/5f3546eb-ccce-42dc-b945-af78c0673014" />
 
 ## Mechanical Assembly
 
