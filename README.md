@@ -53,11 +53,11 @@ A 3D room scanner built using an MSP432 microcontroller and a VL53L1X Time-of-Fl
 
 ## Configuration
 
-To modify the number of x-measurements that are taken, modify the variable xMEASUREMENTS.
-This parameter can be modified in include/ToFSensor.h and visualization/3d_room_scanner.py. The parameter must be changed in both files for proper functionality.
+To modify the number of x-measurements that are taken, modify the variable `xMEASUREMENTS`.
+This parameter can be modified in `include/ToFSensor.h` and `visualization/3d_room_scanner.py`. The parameter must be changed in both files for proper functionality.
 
-To modify the distance between x-measurements (in mm), modify the variable xDISTANCE.
-This parameter can be modified in visualization/3d_room_scanner.py.
+To modify the distance between x-measurements (in mm), modify the variable `xDISTANCE`.
+This parameter can be modified in `visualization/3d_room_scanner.py`.
 
 NOTE: Ensure that port is correct in the visualization code.
 
@@ -70,6 +70,8 @@ NOTE: Ensure that port is correct in the visualization code.
 | ToF SDA | PB3 |
 | Motor Driver VIN | 5 V |
 | Motor Driver IN1–IN4 | PH0–PH3 | 
+
+<img width="952" height="377" alt="image" src="https://github.com/user-attachments/assets/5f3546eb-ccce-42dc-b945-af78c0673014" />
 
 ## Mechanical Assembly
 
